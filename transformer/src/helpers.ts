@@ -103,8 +103,15 @@ export function getTypeSymbol(type: ts.Type, typeChecker: ts.TypeChecker): ts.Sy
 export function isArrayType(type: ts.Type): type is ts.GenericType
 {
 	// [Hookyns] Check if type is Array. I found no direct way to do so.
-	return !!(type.flags & ts.TypeFlags.Object) && type.symbol?.escapedName == "Array";
+	return !!(type.flags & ts.TypeFlags.Object) && type.symbol?.escapedName === "Array";
 }
+
+// export function isTupleType(type: ts.Type): type is ts.GenericType
+// {
+// 	ts.isTupleTypeNode(type.symbol)
+// 	// type.
+// 	return !!(type.flags & ts.TypeFlags.Object) && type.symbol?.escapedName === ""
+// }
 
 /**
  * Check if the type is an Promise
@@ -113,7 +120,7 @@ export function isArrayType(type: ts.Type): type is ts.GenericType
 export function isPromiseType(type: ts.Type): type is ts.GenericType
 {
 	// [Hookyns] Check if type is Promise. I found no direct way to do so.
-	return !!(type.flags & ts.TypeFlags.Object) && type.symbol?.escapedName == "Promise";
+	return !!(type.flags & ts.TypeFlags.Object) && type.symbol?.escapedName === "Promise";
 }
 
 let typeIdCounter = -1;
@@ -790,4 +797,18 @@ export function simplifyUnionWithTrueFalse(type: ts.UnionType, context: Context)
 	}
 
 	return types;
+}
+
+export function isTupleType(type: ts.Type): boolean
+{
+	return (
+		// If the type of object is also flagged as a tuple
+		(((type as ts.ObjectType)?.objectFlags ?? 0) & ts.ObjectFlags.Tuple) !== 0
+	)
+		||
+	( // Of we are a reference to a tuple declaration
+		((((type as ts.ObjectType)?.objectFlags ?? 0) & ts.ObjectFlags.Reference) !== 0)
+		&&
+		(((type as ts.ObjectType) as ts.TypeReference).node?.kind == ts.SyntaxKind.TupleType)
+	);
 }

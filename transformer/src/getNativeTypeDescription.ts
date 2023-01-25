@@ -6,7 +6,7 @@ import { getTypeCall }           from "./getTypeCall";
 import {
 	getTypeId,
 	isArrayType,
-	isPromiseType
+	isPromiseType,
 } from "./helpers";
 
 /**
@@ -100,7 +100,7 @@ export function getNativeTypeDescription(type: ts.Type, context: Context): TypeD
 	{
 		const typeArguments = context.typeChecker.getTypeArguments(type);
 
-		if (typeArguments.length == 1)
+		if (typeArguments.length === 1)
 		{
 			return {
 				ok: true,
@@ -108,12 +108,29 @@ export function getNativeTypeDescription(type: ts.Type, context: Context): TypeD
 					n: "Array",
 					fn: "Array#" + getTypeId(type, context.typeChecker),
 					isg: true,
-					gtd: type.target === type 
-						? undefined 
+					gtd: type.target === type
+						? undefined
 						: getTypeCall(type.target, undefined, context),
 					k: TypeKind.Native,
 					ctor: getNativeTypeCtor("Array"),
 					args: [getTypeCall(typeArguments[0], undefined, context)]
+				}
+			};
+		}
+		else
+		{
+			return {
+				ok: true,
+				typeDescription: {
+					n: "Tuple",
+					fn: "Tuple#" + getTypeId(type, context.typeChecker),
+					isg: true,
+					gtd: type.target === type
+						? undefined
+						: getTypeCall(type.target, undefined, context),
+					k: TypeKind.Native,
+					ctor: getNativeTypeCtor("Array"),
+					args: typeArguments.map(typeArg => getTypeCall(typeArg, undefined, context))
 				}
 			};
 		}

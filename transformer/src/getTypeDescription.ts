@@ -25,6 +25,8 @@ import {
 	getTypeFullName,
 	getTypeKind,
 	getUnknownTypeCall,
+	isArrayType,
+	isTupleType,
 	simplifyUnionWithTrueFalse,
 	UNKNOWN_TYPE_PROPERTIES
 }                                   from "./helpers";
@@ -51,7 +53,14 @@ export function getTypeDescription(
 		log.trace(getNodeLocationText(symbol.declarations[0]));
 	}
 
+	const myDebugType = type.aliasSymbol?.name === "MyT" || type.aliasSymbol?.escapedName === "MyT";
+	
 	const nativeTypeDescriptionResult = getNativeTypeDescription(type, context);
+
+	if (myDebugType)
+	{
+		console.log("nativeTypeDescriptionResult", nativeTypeDescriptionResult);
+	}	
 
 	if (nativeTypeDescriptionResult.ok)
 	{
@@ -133,7 +142,7 @@ export function getTypeDescription(
 	if (symbol)
 	{
 		if (symbol.flags == ts.SymbolFlags.TypeLiteral && type.flags == ts.TypeFlags.Object)
-		{
+		{	
 			if (context.config.debugMode)
 			{
 				log.info("Symbol is TypeLiteral of Object type.");
@@ -236,7 +245,18 @@ export function getTypeDescription(
 			{
 				log.info("Symbol is TypeLiteral of Object type.");
 			}
-
+			
+			// if (isTupleType(type))
+			// {
+			// 	return {
+			// 		properties: {
+			// 			k: TypeKind.Tuple,
+			// 			props: getProperties(symbol, type, context),
+			// 		}
+			// 	}
+			// }
+			
+			
 			return {
 				properties: {
 					k: TypeKind.Object,
@@ -290,7 +310,7 @@ export function getTypeDescription(
 		{
 			log.info("'typeSymbol' is TypeLiteral.");
 		}
-
+		
 		return {
 			properties: {
 				n: type.aliasSymbol?.name.toString(),
