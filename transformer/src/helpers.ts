@@ -39,7 +39,7 @@ export const TRACE_DECORATOR = "trace";
  * Properties of Unknown type
  * @type {{k: TypeKind, n: string}}
  */
-export const UNKNOWN_TYPE_PROPERTIES = { n: "unknown", k: TypeKind.Native };
+export const UNKNOWN_TYPE_PROPERTIES = { n: "unknown", k: TypeKind.Native, };
 
 /**
  * Variable to cache created "unknown" type call
@@ -50,7 +50,7 @@ let unknownTypeCallExpression: GetTypeCall | undefined = undefined;
  * Properties of boolean type
  * @type {{k: TypeKind, n: string}}
  */
-export const BOOLEAN_TYPE_PROPERTIES = { n: "Boolean", k: TypeKind.Native };
+export const BOOLEAN_TYPE_PROPERTIES = { n: "Boolean", k: TypeKind.Native,  };
 
 /**
  * Variable to cache created "boolean" type call

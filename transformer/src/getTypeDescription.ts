@@ -23,6 +23,7 @@ import {
 	getDeclaration,
 	getType,
 	getTypeFullName,
+	getTypeId,
 	getTypeKind,
 	getUnknownTypeCall,
 	simplifyUnionWithTrueFalse,
@@ -78,6 +79,7 @@ export function getTypeDescription(
 		return {
 			properties: {
 				k: TypeKind.Enum,
+				id: getTypeId(type, context.typeChecker),
 				n: symbol?.escapedName.toString(),
 				types: type.types.map(type => getTypeCall(type, undefined, context)),
 			},
@@ -90,6 +92,7 @@ export function getTypeDescription(
 		return {
 			properties: {
 				k: TypeKind.LiteralType,
+				id: getTypeId(type, context.typeChecker),
 				n: getLiteralName(type),
 				v: (type as any).value,
 			},
@@ -122,6 +125,7 @@ export function getTypeDescription(
 			properties: {
 				n: symbol?.escapedName.toString(),
 				k: TypeKind.Container,
+				id: getTypeId(type, context.typeChecker),
 				types: types,
 				union: type.isUnion(),
 				inter: type.isIntersection()
@@ -146,6 +150,7 @@ export function getTypeDescription(
 				return {
 					properties: {
 						k: TypeKind.Object,
+						id: getTypeId(type, context.typeChecker),
 						n: type.aliasSymbol.name,
 						fn: getTypeFullName(type, context),
 						props: getProperties(symbol, type, context),
@@ -158,6 +163,7 @@ export function getTypeDescription(
 			return {
 				properties: {
 					k: TypeKind.Object,
+					id: getTypeId(type, context.typeChecker),
 					props: getProperties(symbol, type, context),
 					indxs: getIndexes(type, context)
 				},
@@ -180,6 +186,7 @@ export function getTypeDescription(
 					return {
 						properties: {
 							k: TypeKind.TransientTypeReference,
+							id: getTypeId(type, context.typeChecker),
 							n: (symbol.valueDeclaration.type.typeName as any).escapedText,
 							args: symbol.valueDeclaration.type.typeArguments?.map(typeNode => getTypeCall(
 									checker.getTypeAtLocation(typeNode),
@@ -212,6 +219,7 @@ export function getTypeDescription(
 						properties: {
 							n: symbol.escapedName.toString(),
 							k: TypeKind.Container,
+							id: getTypeId(type, context.typeChecker),
 							types: types,
 							union: isUnion,
 							inter: isIntersection
@@ -240,6 +248,7 @@ export function getTypeDescription(
 			return {
 				properties: {
 					k: TypeKind.Object,
+					id: getTypeId(type, context.typeChecker),
 					props: getProperties(symbol, type, context),
 					indxs: getIndexes(type, context)
 				},
@@ -255,6 +264,7 @@ export function getTypeDescription(
 			return {
 				properties: {
 					k: TypeKind.ConditionalType,
+					id: getTypeId(type, context.typeChecker),
 					ct: {
 						e: getTypeCall(extendsType, extendsType.symbol, context),
 						tt: getTypeCall(trueType, trueType.symbol, context),
@@ -271,6 +281,7 @@ export function getTypeDescription(
 			return {
 				properties: {
 					k: TypeKind.IndexedAccess,
+					id: getTypeId(type, context.typeChecker),
 					iat: {
 						ot: getTypeCall(indexedAccess.objectType, indexedAccess.objectType.symbol, context),
 						it: getTypeCall(indexedAccess.indexType, indexedAccess.indexType.symbol, context)
@@ -295,6 +306,7 @@ export function getTypeDescription(
 			properties: {
 				n: type.aliasSymbol?.name.toString(),
 				k: TypeKind.Object,
+				id: getTypeId(type, context.typeChecker),
 				props: getProperties(typeSymbol, type, context),
 				indxs: getIndexes(type, context)
 			},
@@ -312,6 +324,7 @@ export function getTypeDescription(
 		return {
 			properties: {
 				k: TypeKind.Object,
+				id: getTypeId(type, context.typeChecker),
 				props: getProperties(typeSymbol, type, context),
 				indxs: getIndexes(type, context)
 			},
@@ -334,6 +347,7 @@ export function getTypeDescription(
 				return {
 					properties: {
 						k: TypeKind.TypeParameter,
+						id: getTypeId(type, context.typeChecker),
 						n: typeParameter.name.escapedText as string,
 						con: typeParameter.constraint && getTypeCall(
 							checker.getTypeAtLocation(typeParameter.constraint),
@@ -359,6 +373,7 @@ export function getTypeDescription(
 		return {
 			properties: {
 				k: TypeKind.Function,
+				id: getTypeId(type, context.typeChecker),
 				n: typeSymbol.getName(),
 				fn: getTypeFullName(type, context),
 				sg: type.getCallSignatures().map(signature => {
@@ -379,6 +394,7 @@ export function getTypeDescription(
 		return {
 			properties: {
 				k: TypeKind.Method,
+				id: getTypeId(type, context.typeChecker),
 				n: typeSymbol.getName(),
 				fn: getTypeFullName(type, context),
 				sg: type.getCallSignatures().map(signature => {
@@ -412,6 +428,7 @@ export function getTypeDescription(
 
 	const properties: TypePropertiesSource = {
 		k: kind,
+		id: getTypeId(type, context.typeChecker),
 		isg: isGenericType,
 		gtd: isGenericType && type !== (type as ts.GenericType).target ? getTypeCall((type as ts.GenericType).target, undefined, context, typeCtor) : undefined,
 		n: typeSymbol.getName(),

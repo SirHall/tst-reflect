@@ -88,6 +88,7 @@ export function getNativeTypeDescription(type: ts.Type, context: Context): TypeD
 			typeDescription: {
 				n: (type as any).intrinsicName,
 				k: TypeKind.Native,
+				id: getTypeId(type, context.typeChecker),
 				ctor: getNativeTypeCtor((type as any).intrinsicName),
 				ctors: undefined,
 				decs: undefined,
@@ -112,6 +113,7 @@ export function getNativeTypeDescription(type: ts.Type, context: Context): TypeD
 						? undefined 
 						: getTypeCall(type.target, undefined, context),
 					k: TypeKind.Native,
+					id: getTypeId(type, context.typeChecker),
 					ctor: getNativeTypeCtor("Array"),
 					args: [getTypeCall(typeArguments[0], undefined, context)]
 				}
@@ -135,6 +137,7 @@ export function getNativeTypeDescription(type: ts.Type, context: Context): TypeD
 						? undefined
 						: getTypeCall(type.target, undefined, context),
 					k: TypeKind.Native,
+					id: getTypeId(type, context.typeChecker),
 					ctor: getNativeTypeCtor("Promise"),
 					args: [getTypeCall(typeArguments[0], undefined, context)]
 				}
