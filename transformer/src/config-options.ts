@@ -29,3 +29,16 @@ export type MetadataType = typeof MetadataTypeValues[keyof typeof MetadataTypeVa
  * @type {string}
  */
 export const DEFAULT_METADATA_LIB_FILE_NAME = "reflection.meta.ts"; // TODO: Check if it rly should be .TS, not .JS
+
+export const ReflectSelectorValues = {
+	/**
+	 * Will always return true for the reflect call
+	 */
+	everything: "everything",
+	/**
+	 * The default option, requires the @reflect JSDoc tag
+	 */
+	tagged: "tagged"
+} as const;
+
+export type ReflectSelector = typeof ReflectSelectorValues[keyof typeof ReflectSelectorValues];

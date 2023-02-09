@@ -12,7 +12,8 @@ import {
 	MetadataType,
 	MetadataTypeValues,
 	Mode,
-	ModeValues
+	ModeValues,
+	ReflectSelector
 }                      from "./config-options";
 import { PackageInfo } from "./declarations";
 import { PACKAGE_ID }  from "./helpers";
@@ -50,6 +51,15 @@ export type ConfigReflectionSection = {
 		 * You can change the name and location if it matters.
 		 */
 		filePath: string
+
+		/**
+		 * Types "tagged" or "everything"
+		 * 
+		 * "tagged" means that special reflection is only performed upon usage of the @reflect JSDoc tag.
+		 * 
+		 * "everything" means that anything that can be specially reflected, will.
+		 */
+		reflectSelector: ReflectSelector
 	},
 
 	debugMode: "true" | "false" | "0" | "1" | boolean,
@@ -149,7 +159,8 @@ function getConfigReflectionSection(configPath: string | undefined): ConfigRefle
 			debugMode: false,
 			metadata: {
 				type: MetadataTypeValues.inline,
-				filePath: ""
+				filePath: "",
+				reflectSelector: "tagged",
 			},
 			deno: false
 		};
@@ -169,7 +180,8 @@ function getConfigReflectionSection(configPath: string | undefined): ConfigRefle
 		debugMode: reflection.debugMode || false,
 		metadata: {
 			type: reflection.metadata?.type || MetadataTypeValues.inline,
-			filePath: reflection.metadata?.filePath?.toString() || ""
+			filePath: reflection.metadata?.filePath?.toString() || "",
+			reflectSelector: reflection.metadata?.reflectSelector || "tagged"
 		},
 		deno: reflection.deno || false
 	};
