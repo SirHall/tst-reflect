@@ -33,7 +33,7 @@ export class TypeLibMetadataNodeGenerator implements IMetadataNodeGenerator
 			// 	undefined,
 			// 	factory.createVariableDeclarationList(
 			// 		[factory.createVariableDeclaration(
-			// 			reflectionMetaIdentifier, 
+			// 			reflectionMetaIdentifier,
 			// 			// factory.createIdentifier("___tst_reflection_meta"),
 			// 			undefined,
 			// 			undefined,
@@ -46,6 +46,9 @@ export class TypeLibMetadataNodeGenerator implements IMetadataNodeGenerator
 			// 		ts.NodeFlags.Const
 			// 	)
 			// ),
+			
+			// We are this to the top of every transformed ts file
+			
 			factory.createVariableStatement(
 				undefined,
 				factory.createVariableDeclarationList(
@@ -123,6 +126,7 @@ export class TypeLibMetadataNodeGenerator implements IMetadataNodeGenerator
 	 */
 	getTypeFromStore(typeId: number): ts.CallExpression
 	{
+		// TODO: Update this to be the contents of what is otherwise this file
 		return factory.createCallExpression(
 			factory.createIdentifier("_tst_reflect_get"),
 			undefined,
@@ -154,6 +158,9 @@ export class TypeLibMetadataNodeGenerator implements IMetadataNodeGenerator
 	 */
 	updateSourceFileGetTypeCall(call: ts.CallExpression): ts.CallExpression
 	{
+
+		// ! This is never called from anywhere, ignore it
+		
 		return ts.factory.updateCallExpression(
 			call,
 			factory.createIdentifier("_tst_reflect_get"),
